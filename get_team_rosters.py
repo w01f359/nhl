@@ -1,22 +1,14 @@
-import json
 import time
 
 import requests
 
+import get_teams
+from utilities import write_to_file
+
 
 def log_roster_data(team_code, season, roster):
     file_name = f"./rosters/roster_{team_code}_{season}.json"
-    with open(file_name, "w") as f:
-        json.dump(roster, f)
-
-
-def get_teams():
-    url = "https://api.nhle.com/stats/rest/en/team"
-    response = requests.get(url)
-    if response.status_code == 200:
-        return response.json()["data"]
-    print(f"{response.status_code} - {response.reason}")
-    return {}
+    write_to_file(file_name, roster)
 
 
 def get_team_roster(team_code, season):
@@ -29,7 +21,7 @@ def get_team_roster(team_code, season):
 
 
 def run_pipeline(start_season, end_season):
-    teams = get_teams()
+    teams = get_teams.read_teams_from_file()
     for season_start in range(start_season, end_season + 1):
         season_str = f"{season_start}{season_start + 1}"
         for team in teams:

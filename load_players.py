@@ -1,26 +1,13 @@
-import json
-import os
 from pathlib import Path
 
-import psycopg2
-from dotenv import load_dotenv
 from psycopg2.extras import execute_values
+import utilities
 
 ROSTER_DIR = Path("./rosters")
 
 
-def insert_player_data(data):
-    load_dotenv()
-    password = os.getenv("DB_PASSWORD")
-
-    conn = psycopg2.connect(
-        host="localhost",
-        port=5432,
-        database="postgres",
-        user="postgres",
-        password=password,
-    )
-
+def insert_player_data(data):    
+    conn = utilities.get_database_connection()
     cur = conn.cursor()
 
     # files contain rosters over many years, which will have duplicate players
@@ -51,11 +38,8 @@ def insert_player_data(data):
 
 
 def get_player_data_from_file(file):
-    players = []
-    with open(file, "r") as f:
-        data = json.load(f)
-        players = data.get("forwards") + data.get("defensemen") + data.get("goalies")
-
+    data = utilities.read_from_file(file)
+    players = data.get("forwards", []) + data.get("defensemen", []) + data.get("goalies", [])
     return players
 
 
