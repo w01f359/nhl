@@ -13,3 +13,15 @@ CREATE TABLE IF NOT EXISTS public.players
     birth_country varchar,
     CONSTRAINT players_pkey PRIMARY KEY (player_id)
 );
+
+
+-- DROP TABLE IF EXISTS public.teams;
+
+CREATE TABLE IF NOT EXISTS public.teams
+(
+    team_id integer NOT NULL,
+    franchise_id integer,
+    full_name varchar,
+    tri_code varchar,
+    CONSTRAINT teams_pkey PRIMARY KEY (team_id)
+);
